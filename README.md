@@ -28,10 +28,11 @@
 > Penjelasan dari kode ini adalah sebagai berikut :<br>
 > * ```for i in *.jpg``` melakukan iterasi untuk setiap file dalam folder **nature**.
 > * ```base64 -d $i ``` mendekripsi setiap file berdasarkan enkripsi base64. Karena hasil dari dekripsi ini berbentuk <a href="https://en.wikipedia.org/wiki/Hex_dump" target="_blank">hexdump</a>, perlu diubah lagi.
-> * ```xxd -r > gambar"$a".jpg``` melakukan reverse hexdump dari hasil dekripsi sebelumnya, dan menyimpan hasil proses tersebut ke dalam file bernama gambar0.jpg sampai gambar96.jpg.
-> Agar script ini dapat dibuka secara terjadwal seperti permintaan soal, kita perlu menambahkan cron job pada cron table. Jalankan ```crontab -e```, dan tulis dalam cron table seperti berikut : 
-> ```14 14 14 2 * /bin/bash /home/(user)/soal1.sh``` untuk menjalankan soal1.sh setiap tanggal 14 Februari jam 14:14.
-> ```* * * 2 5 /bin/bash /home/(user)/soal1.sh``` untuk menjalankan soal1.sh setiap menit setiap hari Jumat pada bulan Februari.
+> * ```xxd -r > gambar"$a".jpg``` melakukan reverse hexdump dari hasil dekripsi sebelumnya, dan menyimpan hasil proses tersebut ke dalam file bernama gambar0.jpg sampai gambar96.jpg.<br>
+>
+> Agar script ini dapat dibuka secara terjadwal seperti permintaan soal, kita perlu menambahkan cron job pada cron table. Jalankan ```crontab -e```, dan tulis dalam cron table seperti berikut : <br>
+> * ```14 14 14 2 * /bin/bash /home/(user)/soal1.sh``` untuk menjalankan soal1.sh setiap tanggal 14 Februari jam 14:14.<br>
+> * ```* * * 2 5 /bin/bash /home/(user)/soal1.sh``` untuk menjalankan soal1.sh setiap menit setiap hari Jumat pada bulan Februari.
 
 2. Anda merupakan pegawai magang pada sebuah perusahaan retail, dan anda diminta untuk memberikan laporan berdasarkan file WA_Sales_Products_2012-14.csv. Laporan yang diminta berupa:\
 a. Tentukan negara dengan penjualan(quantity) terbanyak pada tahun 2012.<br>
