@@ -2,7 +2,6 @@
 
 1. Anda diminta tolong oleh teman anda untuk mengembalikan filenya yang telah dienkripsi oleh seseorang menggunakan bash script, file yang dimaksud adalah nature.zip. Karena terlalu mudah kalian memberikan syarat akan membuka seluruh file tersebut jika pukul 14:14 pada tanggal 14 Februari atau hari tersebut adalah hari jumat pada bulan Februari.\
 Hint: Base64, Hexdump
-
 > Download file nature.zip. Ketika download usai, fila nature.zip seharusnya ada di folder /home/user/Downloads 
 > <img src="https://github.com/AbrahamWong/SoalShift_Modul1_B05/blob/master/images/1_1.JPG">
 
@@ -30,3 +29,20 @@ a. Tidak mengandung string “sudo”, tetapi mengandung string “cron”, sert
 b. Jumlah field (number of field) pada baris tersebut berjumlah kurang dari 13.\
 c. Masukkan record tadi ke dalam file logs yang berada pada direktori /home/[user]/modul1.\
 d. Jalankan script tadi setiap 6 menit dari menit ke 2 hingga 30, contoh 13:02, 13:08, 13:14, dst.
+
+###Jawaban soal 5
+- Untuk menyimpan record dalam syslog yang memenuhi kriteria poin a, b, c silahkan unduh [disini](/soal5.sh) atau bisa dengan menggetikkan :
+```shell
+#!/bin/bash
+
+awk '{if ($0 ~/cron/ && $0 !~ /sudo/ && NF < 13) print $0}' /var/log/syslog > /home/$USER/modul1/record.log
+```
+####Penjelasan:
+- Tidak mengandung string sudo, tetapi mengandung string cron dengan menambahkan ```$0 ~/cron/ && $0 !~ /sudo/```
+- Jumlah field < 13 yaitu dengan menambahkan `NF < 13` 
+- Masukkan record kedalam direktori /home/user/modul1, dengan menambahkan `>` dioutputkan ke direktori yang dimaksud.
+- Jalankan script setiap 6 menit dari menit ke 2 hingga 30
+>```shell
+>$ crontab -e
+>$ 2-30/6 * * * * /bin/bash /path/to/directory/soal5.sh
+>```
