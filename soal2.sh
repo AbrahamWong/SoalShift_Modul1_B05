@@ -27,10 +27,9 @@ echo ""
 
 ###### 2c
 echo "c."
-echo "Personal Accessories"
 awk -F "," -v A="$a" '
 {
-	if($7 == "2012" && $1 == A && $4 == "Personal Accessories")
+	if($7 == "2012" && $1 == A && ($4 == "Personal Accessories" || $4 == "Camping Equipment" || $4 == "Outdoor Protection"))
 	{
 	   prod[$6]+=$10;
 	}
@@ -38,36 +37,5 @@ awk -F "," -v A="$a" '
 END{
 	for(i in prod)
 	 print i "," prod[i]
-}' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -3 | awk -F "," '{
-print $1}'
-
-echo ""
-echo "Camping Equipment"
-awk -F "," -v A="$a" '
-{
-        if($7 == "2012" && $1 == A && $4 == "Camping Equipment")
-        {
-           prod[$6]+=$10;
-        }
-}
-END{
-        for(i in prod)
-         print i "," prod[i]
-}' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -3 | awk -F "," '{
-print $1}'
-
-
-echo ""
-echo "Outdoor Protection"
-awk -F "," -v A="$a" '
-{
-        if($7 == "2012" && $1 == A && $4 == "Outdoor Protection")
-        {
-           prod[$6]+=$10;
-        }
-}
-END{
-        for(i in prod)
-         print i "," prod[i]
 }' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -3 | awk -F "," '{
 print $1}'
