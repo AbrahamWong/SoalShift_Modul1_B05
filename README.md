@@ -67,14 +67,14 @@ d. Password yang dihasilkan tidak boleh sama.<br>
 > for i in *.txt
 > do
 >  a=`head /dev/urandom | tr -dc a-zA-Z0-9 | head -c 12`
-
+>
 >   # Membuat sebuah file baru jika tidak ada file
 >   if [ $i == "*.txt" ]
 >   then
 >     echo $a" > password"$count".txt"
 >     echo $a > password$count.txt
 >     break
-
+>
 >   # Mengecek jika file setelahnya tidak ada. Untuk menjaga urutan nama dan membuat file baru
 >   elif [ ! -e password$((count+1)).txt  ]
 >   then
