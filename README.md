@@ -154,6 +154,46 @@ c. setelah huruf z akan kembali ke huruf a.\
 d. Backup file syslog setiap jam.\
 e. dan buatkan juga bash script untuk dekripsinya.
 
+> ### Jawaban
+> - Untuk mengenkripsi isi file dengan konversi huruf, dapat menggunakan perintah `tr`
+> - Karena diminta formatfile sesuai waktu dan tanggal saat ini, maka kita gunakan perintah `date`
+> - Berikut program bashnya atau bisa diunduh [disini](/soal4_enkripsi.sh) 
+```shell
+#!/bin/bash
+
+# Buat nyimpan jamnya
+jam=$(date "+%H")
+# Buat nyimpan namafilenya
+filename=$(date "+%H:%M %d-%B-%Y")
+
+# Case buat uppercase atau lowercase
+lower=abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+upper=ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+cat /var/log/syslog | tr "${lower:0:26}" "${lower:jam:26}" | tr "${upper:0:26}" "${upper:jam:26}"  > "$filename"
+```
+> - Untuk memback-up file syslog setiap jam, dengan >mengetikkan:
+> ```shell
+> $crontab -e
+> 0 * * * * /bin/bash /path/to/directory/soal4_deskripsi.sh
+> ```
+> - Untuk membuat deskripsinya, hampir sama dari program enkripsi, pada perintah `tr`nya kita ubah rangenya untuk mengembalikannya
+```shell
+#!/bin/bash
+
+# Mengambil argumen pertama dari file
+file="$1"
+filename="$1-dec"
+jam="${file:0:2}"
+
+# Case buat uppercase atau lowercase
+lower=abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+upper=ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+cat "$1" | tr "${lower:0:26}" "${lower:26-jam:26}" | tr "${upper:0:26}" "${upper:26-jam:26}"  > "$filename"
+```
+
+
 5. Buatlah sebuah script bash untuk menyimpan record dalam syslog yang memenuhi kriteria berikut:
 a. Tidak mengandung string “sudo”, tetapi mengandung string “cron”, serta buatlah pencarian stringnya tidak bersifat case sensitive, sehingga huruf kapital atau tidak, tidak menjadi masalah.\
 b. Jumlah field (number of field) pada baris tersebut berjumlah kurang dari 13.\
@@ -162,16 +202,18 @@ d. Jalankan script tadi setiap 6 menit dari menit ke 2 hingga 30, contoh 13:02, 
 
 > ### Jawaban
 > Untuk menyimpan record dalam syslog yang memenuhi kriteria poin a, b, c silahkan unduh [disini](/soal5.sh) atau bisa dengan menggetikkan :
-> ```shell
-> #!/bin/bash
-> awk '{if ($0 ~/cron/ && $0 !~ /sudo/ && NF < 13) print $0}' /var/log/syslog > /home/$USER/modul1/record.log
-> ```
+
+```shell
+#!/bin/bash
+awk '{if ($0 ~/cron/ && $0 !~ /sudo/ && NF < 13) print $0}' /var/log/syslog > /home/$USER/modul1/record.log
+```
+
 > #### Penjelasan:
 > - Tidak mengandung string sudo, tetapi mengandung string cron dengan menambahkan ```$0 ~/cron/ && $0 !~ /sudo/```
 > - Jumlah field < 13 yaitu dengan menambahkan `NF < 13` 
 > - Masukkan record kedalam direktori /home/user/modul1, dengan menambahkan `>` dioutputkan ke direktori yang dimaksud.
 > - Jalankan script setiap 6 menit dari menit ke 2 hingga 30
-> ```shell
-> $ crontab -e
-> $ 2-30/6 * * * * /bin/bash /path/to/directory/soal5.sh
-> ```
+```shell
+$ crontab -e
+$ 2-30/6 * * * * /bin/bash /path/to/directory/soal5.sh
+```
