@@ -2,15 +2,14 @@
 
 ###### 2a
 echo "a."
-awk -F "," '{ if($7=="2012") {country[$1]+=$10;}}
+a=$( awk -F "," '{ if($7=="2012") {country[$1]+=$10;}}
 END{ for(i in country) print i "," country[i];
 }' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -1 | awk -F , '{
-print $1}'
-echo ""
+print $1}' )
+echo $a
 
 ###### 2b
 echo "b."
-a=`awk -F "," '{print $1}' report1.txt`
 awk -F "," -v A="$a" '
 {
 	if($7 == "2012" && $1 == A)
