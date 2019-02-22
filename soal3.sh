@@ -36,8 +36,6 @@ do
   let count++
 done
 
-echo $count
-
 # Mengecek jika ada password yang sama di antara dua file
 for i in password*.txt
 do
