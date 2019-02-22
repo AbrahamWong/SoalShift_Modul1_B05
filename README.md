@@ -59,68 +59,92 @@ d. Password yang dihasilkan tidak boleh sama.<br>
 > Kemudian, untuk membuat file password tepat sesuai urutan, dan tidak menghasilkan password yang sama, buat sebuah script dengan perintah
 > ```bash
 > #!/bin/bash
->
+> 
 > # Deklarasi variabel count dan membuat password a
 > count=1
-> a=`head /dev/urandom | tr -dc a-zA-Z0-9 | head -c 12`
 >
 > # Membuat file
 > for i in *.txt
 > do
->  # Membuat sebuah file baru jika tidak ada file
->  if [ $i == "*.txt" ]
->  then
->    echo $a" > password"$count".txt"
->    echo $a > password$count.txt
->    break
->  # Mengecek jika file setelahnya tidak ada. Untuk menjaga urutan nama dan membuat file baru
->  elif [ ! -e password$((count+1)).txt  ]
->  then
->    echo $a" > password"$((count+1))".txt"
->    echo $a > password$((count+1)).txt
->    break
->  # Jika berjalan dengan normal, tambahkan variabel count dengan 1
->  else
->    count=$(($count+1))
->  fi
+>  a=`head /dev/urandom | tr -dc a-zA-Z0-9 | head -c 12`
+
+>   # Membuat sebuah file baru jika tidak ada file
+>   if [ $i == "*.txt" ]
+>   then
+>     echo $a" > password"$count".txt"
+>     echo $a > password$count.txt
+>     break
+
+>   # Mengecek jika file setelahnya tidak ada. Untuk menjaga urutan nama dan membuat file baru
+>   elif [ ! -e password$((count+1)).txt  ]
+>   then
+>     echo $a" > password"$((count+1))".txt"
+>     echo $a > password$((count+1)).txt
+>     count=$(($count+1))
+>
+>   # Jika berjalan dengan normal, tambahkan variabel count dengan 1
+>   else
+>     count=$(($count+1))
+>   fi
+> done
+> 
+> count=0
+> for i in password*.txt
+> do
+>   let count++
 > done
 >
 > # Mengecek jika ada password yang sama di antara dua file
 > for i in password*.txt
 > do
->  if [ $count != 0  ]
->  then
->    # Buat variabel c untuk menyimpan isi file password yang paling baru / terakhir
->    c=$( cat password$count.txt )
->    # Cek untuk setiap file
->    for((i=$(($count-1)); i>0; i--))
->      do
->       # Buat variabel d untuk menyimpan isi file password yang sebelumnya
->       d=$( cat password$i.txt  )
->       # Bandingkan antara c dan d. Jika sama, generate password baru, dan beritahu user. 
->       # Jika tidak, lewati.
->       if [ $c == $d ]
->       then
->     	  b=$( head /dev/urandom | tr -dc a-zA-Z0-9 | head -c 12 )
->     	  echo "Password dalam password"$i".txt diubah menjadi "$b
->     	  echo $b > password$i.txt
->       else
->	        continue
->       fi
->      done
->    count=$(($count-1))
->  else
->    break
->  fi
+>   if [ $count != 0  ]
+>   then
+> 
+>     # Buat variabel c untuk menyimpan isi file password yang paling baru / terakhir
+>     c=$( cat password$count.txt )
+>
+>     # Cek untuk setiap file
+>     for((i=$(($count-1)); i>0; i--))
+>       do
+> 	      # Buat variabel d untuk menyimpan isi file password yang sebelumnya
+>         d=$( cat password$i.txt  )
+>
+> 	      # Bandingkan antara c dan d. Jika sama, generate password baru, dan beritahu user
+> 	      # Jika tidak, lewati.
+>         if [ $c == $d ]
+>         then
+> 	        b=$( head /dev/urandom | tr -dc a-zA-Z0-9 | head -c 12 )
+> 	        echo "Password dalam password"$i".txt diubah menjadi "$b
+> 	        echo $b > password$i.txt
+>         else
+> 	        continue
+>         fi
+>       done
+>     count=$(($count-1))
+>   else
+>     break
+>   fi
 > done
 > ```
 > #### Penjelasan
+> Untuk mengisi file password dengan password yang telah dibuat, perintahnya adalah : 
 > - ```count=1``` untuk mengeset variabel count menjadi 1. Variabel count nantinya akan dipakai untuk pengecekan nama dan isi file.
 > - ```for i in *.txt``` untuk mengecek setiap file dalam direktori tersebut. Jika ada file, file akan diiterasi dengan perintah dalam **for**. Jika tidak ada file, kembalikan **\*.txt**.
+> - ```a=`head /dev/urandom | tr -dc a-zA-Z0-9 | head -c 12` ``` menyimpan 12 bit string random yang berisi huruf besar, kecil, dan angka ke dalam variabel a.
 > - ```if [ $i == "*.txt" ]``` mengecek jika tidak ada file sama sekali.
-> - ```elif [ ! -e password$((count+1)).txt  ]``` mengecek jika nama file setelah file tersebut (dalam iterasi) ada. Ini bertujuan untuk menjaga urutnya nama file, sesuai instruksi soal.
-> - ```else count=$(($count+1))``` menambah count dengan 1.
-> - Untuk menjaga agar password tidak sama, cek setiap isi password dengan meng-```cat``` file password satu dengan yang lain. Jika ada yang sama, buat suatu string baru yang berisi password lain yang digenerate, dan isi file lain tersebut diubah dengan string tersebut.  
+> - ```echo $a > password$count.txt``` untuk memasukan isi dari variabel a ke dalam file password pertama, sesuai instruksi soal bagian a. 
+> - ```elif [ ! -e password$((count+1)).txt  ]``` mengecek jika nama file setelah file tersebut (dalam iterasi) ada. Ini bertujuan untuk menjaga urutnya nama file, sesuai instruksi soal bagian b dan c.
+> - ```echo $a > password$((count+1)).txt``` untuk memasukkan isi dari variabel a ke dalam file password setelah file yang dicek.
+> - ```count=$(($count+1))``` menambah count dengan 1.
+>
+> **count** kemudian di-reset untuk kemudian dimasukan dalam fungsi ```for i in password*.txt``` pertama, untuk mengetahui seberapa banyak file password yang ada sekarang.
+> 
+> Untuk menjaga agar password tidak sama seperti instruksi soal bagian d, setiap isi file perlu dicek dan dibandingkan dengan file lain.
+> - ```for i in password*.txt``` mengecek setiap file bernama password dengan angka berapapun, dan memiliki format .txt.
+> - ```if [ $count != 0  ]``` mengecek jika count tidak sama dengan 0. Saat ini nilai **count** adalah banyaknya file.
+> - Buat variabel c yang memuat isi dari file password ke - count, dan lakukan iterasi untuk setiap file dari file ke - (count - 1) sampai file terakhir.
+> - Untuk setiap file, jika ada file yang memiliki isi yang sama, buat password baru, dan masukkan ke dalam file password dalam iterasi (bukan file ke - count).
+> - Jika tidak ada, kurangi count dengan 1, ulangi step di atas. 
 
 4. Lakukan backup file syslog setiap jam dengan format nama file “jam:menit tanggal-bulan-tahun”. Isi dari file backup terenkripsi dengan konversi huruf (string manipulation) yang disesuaikan dengan jam dilakukannya backup misalkan sebagai
 berikut:\
