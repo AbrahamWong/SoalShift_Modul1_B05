@@ -41,6 +41,60 @@ a. Tentukan negara dengan penjualan(quantity) terbanyak pada tahun 2012.<br>
 b. Tentukan tiga product line yang memberikan penjualan(quantity) terbanyak pada soal poin a.<br>
 c. Tentukan tiga product yang memberikan penjualan(quantity) terbanyak berdasarkan tiga product line yang didapatkan pada soal poin b.<br>
 
+
+> Sebelum memulai menyortir data, perlu diingat bahwa file dalam format **.csv**, dan data dipisah dengan koma. Karena itu, gunakan opsi -F "," untuk mengatur pemisah antar atribut.
+> ```bash
+> #!/bin/bash
+> 
+> ###### 2a
+> echo "a."
+> a=$( awk -F "," '{ if($7=="2012") {country[$1]+=$10;}}
+> END{ for(i in country) print i "," country[i];
+> }' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -1 | awk -F , '{
+> print $1}' )
+> echo $a
+> ```
+> 
+> - Dalam bagian 2a, buat sebuah variabel a. Dalam variabel a, berikan perintah untuk mengecek, jika pada kolom ke - 7 (tahun) data menunjukan angka 2012, memasukkan nilai dalam kolom ke - 10 (quantity) data tersebut ke array country dengan indeks nama negara, seperti pada kolom ke - 1 (nama negara) data tersebut. Kemudian, keluaran dari perintah tersebut diurutkan, dan diambil data teratasnya. Cetak variabel tersebut.
+> 
+> ```bash
+> ###### 2b
+> echo "b."
+> awk -F "," -v A="$a" '
+> {
+>	if($7 == "2012" && $1 == A)
+>	{
+>	  prod_line[$4]+=$10;
+>	}
+> }
+> END{
+>	for(i in prod_line)
+>	 print i "," prod_line[i];
+> }' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -3 | awk -F , '{print $1}' report2.txt
+> echo ""
+> ```
+> 
+> - Dalam bagian 2b, variabel tadi kita gunakan sebagai pembanding. Perintah yang dieksekusi adalah untuk mengecek apakah nama negara data tersebut sama dengan a, dan data menunjukkan tahun 2012. Dekalarasi variabel a langsung dalam awk tidak akan berhasil, karena variabel a merupakan variabel shell. Gunakan ```-v A="$a"``` untuk memasukkan a ke dalam awk sebagai A.
+> - ```head -3``` mengambil 3 baris teratas, dari defaultnya 10 baris.
+> 
+> ```bash
+> ###### 2c
+> echo "c."
+> awk -F "," -v A="$a" '
+> {
+>	if($7 == "2012" && $1 == A && ($4 == "Personal Accessories" || $4 == "Camping Equipment" || $4 == "Outdoor Protection"))
+>	{
+>	   prod[$6]+=$10;
+>	}
+> }
+> END{
+>	for(i in prod)
+>	 print i "," prod[i]
+> }' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -3 | awk -F "," '{print $1}'
+> ```
+> 
+> - Dalam bagian 2c, variabel a masih digunakan sebagai pembanding. Perintah yang dieksekusi adalah untuk mengecek apakah nama negara data tersebut sama dengan a, dan data menunjukkan tahun 2012. Dalam jawaban nomor 2b telah dikertahui bahwa 3 product line teratas adalah Personal Accessories, Camping Equipment, dan Outdoor Protection. Gunakan info ini sebagai pembanding dalam if.
+
 3. Buatlah sebuah script bash yang dapat menghasilkan password secara acak sebanyak 12 karakter yang terdapat huruf besar, huruf kecil, dan angka. Password acak tersebut disimpan pada file berekstensi .txt dengan ketentuan pemberian nama sebagai berikut:\
 a. Jika tidak ditemukan file password1.txt maka password acak tersebut disimpan pada file bernama password1.txt.<br>
 b. Jika file password1.txt sudah ada maka password acak baru akan disimpan pada file bernama password2.txt dan begitu seterusnya.<br>
@@ -175,7 +229,7 @@ cat /var/log/syslog | tr "${lower:0:26}" "${lower:jam:26}" | tr "${upper:0:26}" 
 > - Untuk memback-up file syslog setiap jam, dengan >mengetikkan:
 > ```shell
 > $crontab -e
-> 0 * * * * /bin/bash /path/to/directory/soal4_enkripsi.sh
+> 0 * * * * /bin/bash /path/to/directory/soal4_deskripsi.sh
 > ```
 > - Untuk membuat deskripsinya, hampir sama dari program enkripsi, pada perintah `tr`nya kita ubah rangenya untuk mengembalikannya
 ```shell
