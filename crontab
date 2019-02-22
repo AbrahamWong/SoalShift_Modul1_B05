@@ -23,5 +23,9 @@
 
 # perintah crontab
 
+# Nomer 1
+14 14 14 2 * /bin/bash /home/$USER/soal1.sh
+* * * 2 5 /bin/bash /home/$USER/soal1.sh
+
 # Nomer 5
 2-30/6 * * * * /bin/bash /home/$USER/modul1/soal5.sh
