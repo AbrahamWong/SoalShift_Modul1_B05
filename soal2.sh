@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ~/Downloads
+
 ###### 2a
 echo "a."
 a=$( awk -F "," '{ if($7=="2012") {country[$1]+=$10;}}
