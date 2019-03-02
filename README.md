@@ -70,7 +70,7 @@ c. Tentukan tiga product yang memberikan penjualan(quantity) terbanyak berdasark
 > END{
 >	for(i in prod_line)
 >	 print i "," prod_line[i];
-> }' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -3 | awk -F , '{print $1}' report2.txt
+> }' WA_Sales_Products_2012-14.csv | sort -t "," -k2rn | head -3 | awk -F , '{print $1}'
 > echo ""
 > ```
 > 
