@@ -229,7 +229,7 @@ cat /var/log/syslog | tr "${lower:0:26}" "${lower:jam:26}" | tr "${upper:0:26}" 
 > - Untuk memback-up file syslog setiap jam, dengan >mengetikkan:
 > ```shell
 > $crontab -e
-> 0 * * * * /bin/bash /path/to/directory/soal4_deskripsi.sh
+> 0 * * * * /bin/bash /path/to/directory/soal4_enkipsi.sh
 > ```
 > - Untuk membuat deskripsinya, hampir sama dari program enkripsi, pada perintah `tr`nya kita ubah rangenya untuk mengembalikannya
 ```shell

@@ -28,7 +28,7 @@
 * * * 2 5 /bin/bash /home/$USER/soal1.sh
 
 # Nomer 4
-0 * * * * /bin/bash /home/$USER/soal4_deskripsi.sh
+0 * * * * /bin/bash /home/$USER/soal4_enkripsi.sh
 
 # Nomer 5
 2-30/6 * * * * /bin/bash /home/$USER/modul1/soal5.sh
